@@ -3,12 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="./assets/styles/style.css">
     <title>Weather Dashboard</title>
 </head>
 <body>
     <h1>Weather Dashboard</h1>
+
+    <!-- Using Bootstrap to get a left side search bar -->
+    <div class="container-fluid">
+        <div class="row main">
+            <div class="col-3 search-area">
+                <h4>Search for a city:</h2>
+                <form>
+                    <input type="text" class="city-input">
+                    <input type="submit" class="city-submit">
+                </form>
+            </div>
+            <div class="col-9">
+                <div class="display-area">filler</div>
+            </div>
+        </div>
+    </div>
     
+    <!-- Javascript -->
     <script src="./assets/js/script.js"></script>
 </body>
 </html>
