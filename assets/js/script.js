@@ -20,12 +20,12 @@ $(document).ready(function() {
     // Displays all the cities
     function displayCities() {
         cityList.empty();
-        for (var i = 0; i < citiesArr.length; i++) {
+        for (var i = citiesArr.length; i > 0; i--) {
             var liTag = $("<li>");
             var button = $("<button>");
             button.attr("style", "width: 150px");
             button.addClass("city-button");
-            button.text(citiesArr[i]);
+            button.text(citiesArr[i - 1]);
             liTag.append(button);
             cityList.append(liTag);
         }
@@ -33,38 +33,54 @@ $(document).ready(function() {
 
     // Displays the weather
     function displayWeather(cityDisplaying) {
-
+        // Makes sure it won't double display
+        curWeather.empty();
+        
         // My key is "d9131680735a7b4b06edce9e340f8e49" for when it works
         var APIkey = "da3b420f1e1dfac228712750d83221b3";
-        var city = cityDisplaying.toLowerCase();
-        var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIkey;
+        var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityDisplaying.toLowerCase() + "&appid=" + APIkey;
         $.ajax({
             url: queryURL,
             method: "GET"
-          }).then(function (response) {
+        }).then(function (response) {
+            curWeather.empty();
             console.log(response);
             // Gets date using the UNIX timestamp
             var date = new Date((response.sys.sunrise * 1000));
             // The name it'll show (which includes date)
-            var showName = cityDisplaying + " " + date.toLocaleDateString();
+            var name = cityDisplaying + " " + date.toLocaleDateString();
+            // To show the icon for the weather
+            var weatherIco = $("<img>").attr("src", "http://openweathermap.org/img/w/" + response.weather[0].icon + ".png")
             // Displays the name
-            var name = $("<h1>");
-            name.text(showName);
-            curWeather.append(name);
+            var showName = $("<h1>");
+            showName.text(name);
+            showName.append(weatherIco);
+            curWeather.append(showName);
 
             // Gets temperature, converts to fahrenheit
             var tempKelv = response.main.temp;
             var tempFar = Math.floor((tempKelv - 273.15) * 9 / 5 + 32);
             // Displays temperature
-            var temp = $("<p>");
-            temp.text("Temperature: " + tempFar + " F");
+            var temp = $("<p>").text("Temperature: " + tempFar + " F");
             curWeather.append(temp);
+
+            // Gets humidity and displays it
+            var humidity = response.main.humidity;
+            var showHumidity = $("<p>").text("Humidity: " + humidity + "%")
+            curWeather.append(showHumidity);
+
+            // Gets wind speed and displays it
+            var windSpeed = response.wind.speed;
+            var showWind = $("<p>").text("Wind speed: " + windSpeed + " MPH");
+            curWeather.append(showWind);
           })
     }
 
     // Displays all cities at first and a default weather area
     displayCities();
-    displayWeather(citiesArr[0]);
+    if (citiesArr.length > 0) {
+        displayWeather(citiesArr[citiesArr.length -1]);
+    }
 
     // This saves the city to search history
     subBtn.click(function(event) {
@@ -75,13 +91,14 @@ $(document).ready(function() {
             citiesArr.push(newCity);
             cityInput.val("");
             numCities++;
+            displayWeather(newCity);
             displayCities();
-            displayWeather(newCity); 
         }
     });
 
     // Displays this cities weather when its button is clicked
-    $(".city-button").click(function(event) {
-        displayWeather($(this).text());
+    cityList.on("click", function(event) {
+        event.preventDefault();
+        displayWeather(event.target.textContent);
     });
 })
