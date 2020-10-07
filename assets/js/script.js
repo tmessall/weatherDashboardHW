@@ -80,7 +80,7 @@ $(document).ready(function() {
             lon = response.coord.lon;
             
             // Second API call, to get UV index
-            queryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + APIkey;
+            queryURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + APIkey;
             $.ajax({
                 url: queryURL,
                 method: "GET"
