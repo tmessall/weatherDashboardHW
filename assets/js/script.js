@@ -47,7 +47,6 @@ $(document).ready(function() {
             method: "GET"
         }).then(function (response) {
             curWeather.empty();
-            console.log(response);
             // Gets date using the UNIX timestamp
             var date = new Date((response.sys.sunrise * 1000));
             // The name it'll show (which includes date)
@@ -64,7 +63,7 @@ $(document).ready(function() {
             var tempKelv = response.main.temp;
             var tempFar = Math.floor((tempKelv - 273.15) * 9 / 5 + 32);
             // Displays temperature
-            var temp = $("<p>").text("Temperature: " + tempFar + " F");
+            var temp = $("<p>").text("Temperature: " + tempFar + " °F");
             curWeather.append(temp);
 
             // Gets humidity and displays it
@@ -86,7 +85,6 @@ $(document).ready(function() {
                 url: queryURL,
                 method: "GET"
             }).then(function (response) {
-                console.log(response);
                 var uvNum = response.value;
                 var uvIndex = $("<span>").text(uvNum);
                 // Color is set based on air quality
@@ -105,8 +103,44 @@ $(document).ready(function() {
                 showUV.append(uvIndex);
                 curWeather.append(showUV);
             });
+            
+            // Third API call, next 5 days forecast
+            queryURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minute,hourly,alerts&appid=" + APIkey;
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).then(function (response) {
+                console.log(response);
+                for (var i = 1; i < 6; i++) {
+                    var futureWeatherDay = $(`.future${i}`);
+                    futureWeatherDay.empty();
+                    var dayWeather = response.daily[i];
 
-          });
+                    // Gets and shows the date
+                    var futureDate = new Date((dayWeather.sunrise * 1000));
+                    var h4Tag = $("<h4>").text(futureDate.toLocaleDateString());
+                    futureWeatherDay.append(h4Tag);
+
+                    // Gets and shows the icon
+                    var futureIco = $("<img>").attr("src", "http://openweathermap.org/img/w/" + dayWeather.weather[0].icon + ".png")
+                    futureWeatherDay.append(futureIco);
+
+                    // Gets and shows the temp
+                    var futureTempK = dayWeather.temp.day;
+                    var futureTempF = Math.floor((futureTempK - 273.15) * 9 / 5 + 32);
+                    console.log(futureTempK);
+                    console.log(futureTempF);
+                    var showFutureT = $("<p>").text("Temperature: " + futureTempF + " °F");
+                    futureWeatherDay.append(showFutureT);
+
+                    // Gets and shows the humidity
+                    var futureHumid = dayWeather.humidity;
+                    var showFutureH = $("<p>").text("Humiditiy: " + futureHumid + "%");
+                    futureWeatherDay.append(showFutureH);
+                }
+            });
+
+        });
 
           
 

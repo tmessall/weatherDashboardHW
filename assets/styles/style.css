@@ -33,9 +33,18 @@
 
 .current-weather {
     outline: solid 1px black;
-    width: 85%;
-    margin: 20px auto;
-    height: 400px;
+    margin: 20px 0;
+    height: 240px;
+}
+
+.future-header {
+    margin-bottom: 20px;
+}
+
+.future-weather {
+    outline: solid 1px blue;
+    height: 180px;
+    padding-left: 0;
 }
 
 ul {
