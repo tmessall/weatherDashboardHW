@@ -35,10 +35,13 @@ $(document).ready(function() {
     function displayWeather(cityDisplaying) {
         // Makes sure it won't double display
         curWeather.empty();
-        
+        var lat = 0;
+        var lon = 0;
         // My key is "d9131680735a7b4b06edce9e340f8e49" for when it works
         var APIkey = "da3b420f1e1dfac228712750d83221b3";
         var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityDisplaying.toLowerCase() + "&appid=" + APIkey;
+
+        // First API Call, gets through wind speed
         $.ajax({
             url: queryURL,
             method: "GET"
@@ -73,7 +76,41 @@ $(document).ready(function() {
             var windSpeed = response.wind.speed;
             var showWind = $("<p>").text("Wind speed: " + windSpeed + " MPH");
             curWeather.append(showWind);
-          })
+
+            lat = response.coord.lat;
+            lon = response.coord.lon;
+            
+            // Second API call, to get UV index
+            queryURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + APIkey;
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).then(function (response) {
+                console.log(response);
+                var uvNum = response.value;
+                var uvIndex = $("<span>").text(uvNum);
+                // Color is set based on air quality
+                if (uvNum < 3) {
+                    uvIndex.attr("style", "background-color: green");
+                } else if (uvNum < 6) {
+                    uvIndex.attr("style", "background-color: yellow");
+                } else if (uvNum < 8) {
+                    uvIndex.attr("style", "background-color: orange");
+                  } else if (uvNum < 10) {
+                    uvIndex.attr("style", "background-color: red")
+                } else {
+                    uvIndex.attr("style", "background-color: purple")
+                }
+                var showUV = $("<span>").text("UV index: ");
+                showUV.append(uvIndex);
+                curWeather.append(showUV);
+            });
+
+          });
+
+          
+
+
     }
 
     // Displays all cities at first and a default weather area
