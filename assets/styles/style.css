@@ -17,9 +17,14 @@ h1 {
 }
 
 .search-area {
+    padding-left: 30px;
     background-color: lightgray;
     margin-bottom: 0;
     bottom: 0;
+}
+
+.search-area h4 {
+    text-align: left;
 }
 
 .display-area {

@@ -5,11 +5,11 @@ $(document).ready(function() {
     // Makes the list of cities to print out from local storage
     var numCities = 0;
     var citiesArr = [];
-    var newCity = true;
-    while (newCity) {
+    var newCityCheck = true;
+    while (newCityCheck) {
         var makeCity = localStorage.getItem(`cityNo${numCities}`);
         if (makeCity == null) {
-            newCity = false;
+            newCityCheck = false;
         } else {
             citiesArr.push(makeCity);
             numCities++;
@@ -23,21 +23,43 @@ $(document).ready(function() {
             var liTag = $("<li>");
             var button = $("<button>");
             button.attr("style", "width: 150px");
+            button.addClass("city-button");
             button.text(citiesArr[i]);
             liTag.append(button);
             cityList.append(liTag);
         }
     }
-
     displayCities();
+
+    function displayWeather(cityDisplaying) {
+
+        // My key is "d9131680735a7b4b06edce9e340f8e49" for when it works
+        var APIkey = "da3b420f1e1dfac228712750d83221b3";
+        var city = cityDisplaying.toLowerCase();
+        var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + APIkey;
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+          }).then(function (response) {
+            console.log(response);
+          })
+    }
 
     // This saves the city to search history
     subBtn.click(function(event) {
         event.preventDefault();
-        localStorage.setItem(`cityNo${numCities}`, cityInput.val());
-        citiesArr.push(cityInput.val());
-        cityInput.val("");
-        numCities++;
-        displayCities();
-    })
+        var newCity = cityInput.val();
+        if (newCity.length > 0) {
+            localStorage.setItem(`cityNo${numCities}`, newCity);
+            citiesArr.push(newCity);
+            cityInput.val("");
+            numCities++;
+            displayCities();
+            displayWeather(newCity); 
+        }
+    });
+
+    $(".city-button").click(function(event) {
+        displayWeather($(this).text());
+    });
 })
