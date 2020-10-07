@@ -21,7 +21,10 @@ $(document).ready(function() {
         cityList.empty();
         for (var i = 0; i < citiesArr.length; i++) {
             var liTag = $("<li>");
-            liTag.text(citiesArr[i]);
+            var button = $("<button>");
+            button.attr("style", "width: 150px");
+            button.text(citiesArr[i]);
+            liTag.append(button);
             cityList.append(liTag);
         }
     }
@@ -33,6 +36,7 @@ $(document).ready(function() {
         event.preventDefault();
         localStorage.setItem(`cityNo${numCities}`, cityInput.val());
         citiesArr.push(cityInput.val());
+        cityInput.val("");
         numCities++;
         displayCities();
     })
