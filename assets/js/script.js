@@ -168,7 +168,7 @@ $(document).ready(function() {
     });
 
     // Displays this cities weather when its button is clicked
-    cityList.on("click", function(event) {
+    cityList.on("click", "button", function(event) {
         event.preventDefault();
         displayWeather(event.target.textContent);
     });
