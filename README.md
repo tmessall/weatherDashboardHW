@@ -12,4 +12,4 @@ Type a city into the search bar to pull up its forecast, or select one from the 
 
 ## Link to Application
 
-https://tmessall.github.io/codeQuizHW/
+https://tmessall.github.io/weatherDashboardHW/
